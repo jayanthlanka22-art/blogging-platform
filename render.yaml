@@ -4,8 +4,8 @@ services:
     env: node
     plan: free
     rootDir: backend
-    buildCommand: npm install && npx prisma generate && npm run build
-    startCommand: npx prisma db push --schema=prisma/schema.prisma && npm start
+    buildCommand: npm install && npm run prisma:generate && npm run build
+    startCommand: npm run db:push && npm start
     envVars:
       - key: DATABASE_URL
         fromDatabase:

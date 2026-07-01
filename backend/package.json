@@ -8,6 +8,7 @@
     "start": "node dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
     "db:seed": "prisma db seed",
     "prisma:generate": "prisma generate",
     "test": "jest --runInBand --detectOpenHandles --forceExit"
