@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-dark-bg text-dark-text antialiased;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(22, 31, 48, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(35, 48, 68, 0.5);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel-hover:hover {
+  background: rgba(22, 31, 48, 0.85);
+  border-color: rgba(59, 102, 255, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px -10px rgba(59, 102, 255, 0.2);
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0B0F19;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #233044;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3B66FF;
+}
+
+/* Markdown Rendering Custom Styles */
+.prose h1 {
+  @apply text-3xl font-extrabold tracking-tight text-white mb-6 mt-8;
+}
+
+.prose h2 {
+  @apply text-2xl font-bold tracking-tight text-white mb-4 mt-6 border-b border-dark-border pb-2;
+}
+
+.prose h3 {
+  @apply text-xl font-semibold text-white mb-3 mt-5;
+}
+
+.prose p {
+  @apply mb-4 leading-relaxed text-gray-300;
+}
+
+.prose ul {
+  @apply list-disc pl-6 mb-4 text-gray-300;
+}
+
+.prose ol {
+  @apply list-decimal pl-6 mb-4 text-gray-300;
+}
+
+.prose li {
+  @apply mb-1;
+}
+
+.prose code {
+  @apply px-1.5 py-0.5 rounded bg-dark-bg text-brand-300 text-sm font-mono;
+}
+
+.prose pre {
+  @apply p-4 rounded-lg bg-dark-bg border border-dark-border overflow-x-auto mb-6 mt-4;
+}
+
+.prose pre code {
+  @apply p-0 bg-transparent text-gray-200 text-sm font-mono block;
+}
+
+.prose blockquote {
+  @apply border-l-4 border-brand-500 pl-4 italic text-gray-400 my-6;
+}
+
+.prose a {
+  @apply text-brand-400 hover:text-brand-300 underline transition-colors;
+}
+
+.prose img {
+  @apply rounded-lg my-6 max-w-full h-auto;
+}
