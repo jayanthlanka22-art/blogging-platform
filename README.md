@@ -1,4 +1,4 @@
-# Antigravity Secure Blogging Platform
+# ByteStream Secure Blogging Platform
 
 A secure, scalable, and production-ready full-stack blogging platform built with **Node.js (Express) + TypeScript + Prisma ORM** on the backend and **React (Vite) + TypeScript + Tailwind CSS** on the frontend.
 
@@ -120,7 +120,7 @@ npm run dev
 ```
 * **Frontend Client**: [http://localhost:5173](http://localhost:5173)
 * **Backend Server**: [http://localhost:3001](http://localhost:3001)
-* **API Documentation**: OpenAPI spec file resides in [openapi.json](file:///c:/Users/jayan/blog%20platform/backend/src/utils/openapi.json)
+* **API Documentation**: OpenAPI spec file resides in [openapi.json](./backend/src/utils/openapi.json)
 
 ---
 

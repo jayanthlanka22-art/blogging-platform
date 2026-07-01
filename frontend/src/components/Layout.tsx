@@ -22,7 +22,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
               <Link to="/" className="flex items-center gap-2 text-white hover:text-brand-400 transition-colors">
                 <BookOpen className="h-6 w-6 text-brand-500" />
                 <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
-                  Antigravity Blog
+                  ByteStream Blog
                 </span>
               </Link>
               <nav className="hidden md:flex space-x-1">
@@ -96,7 +96,7 @@ export const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) =>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
           <div className="flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-brand-600" />
-            <span>© 2026 Antigravity Blog. Production SaaS Platform.</span>
+            <span>© 2026 ByteStream Blog. Production SaaS Platform.</span>
           </div>
           <div className="flex gap-4">
             <a href="#" className="hover:text-brand-400 transition-colors">Privacy Policy</a>
