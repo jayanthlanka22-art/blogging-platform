@@ -24,7 +24,7 @@ services:
       - key: JWT_REFRESH_EXPIRY
         value: 7d
       - key: FRONTEND_URL
-        value: https://your-frontend.vercel.app
+        value: https://frontend-lemon-theta-22.vercel.app
 
 databases:
   - name: blog-db
