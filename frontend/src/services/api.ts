@@ -71,7 +71,7 @@ const handleTokenRefresh = async (): Promise<string | null> => {
     }
     
     return null;
-  } catch (error) {
+  } catch {
     setAccessToken(null);
     return null;
   } finally {

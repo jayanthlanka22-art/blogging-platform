@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { request } from '../../services/api';
 import { useAuth } from '../auth/AuthContext';
 import { MessageSquare, CornerDownRight, Trash2, Edit2, ShieldAlert } from 'lucide-react';
@@ -32,18 +32,18 @@ export const CommentThread: React.FC<CommentThreadProps> = ({ postId }) => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     setLoading(true);
     const res = await request(`/posts/${postId}/comments`);
     if (res.success && res.data) {
       setComments(res.data);
     }
     setLoading(false);
-  };
+  }, [postId]);
 
   useEffect(() => {
     fetchComments();
-  }, [postId]);
+  }, [fetchComments]);
 
   const handleAddRootComment = async (e: React.FormEvent) => {
     e.preventDefault();

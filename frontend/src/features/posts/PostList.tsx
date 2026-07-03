@@ -15,27 +15,26 @@ export const PostList: React.FC = () => {
   const [status, setStatus] = useState<string>('');
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'most-commented'>('newest');
 
-  // Fetch posts
-  const fetchPosts = async () => {
-    setLoading(true);
-    const query = new URLSearchParams();
-    query.append('page', page.toString());
-    query.append('limit', '6');
-    query.append('sortBy', sortBy);
-    if (tag) query.append('tag', tag);
-    if (status) query.append('status', status);
-
-    const res = await request(`/posts?${query.toString()}`);
-    if (res.success && res.data) {
-      setPosts(res.data);
-      if (res.meta) {
-        setTotalPages(res.meta.totalPages);
-      }
-    }
-    setLoading(false);
-  };
-
   useEffect(() => {
+    const fetchPosts = async () => {
+      setLoading(true);
+      const query = new URLSearchParams();
+      query.append('page', page.toString());
+      query.append('limit', '6');
+      query.append('sortBy', sortBy);
+      if (tag) query.append('tag', tag);
+      if (status) query.append('status', status);
+
+      const res = await request(`/posts?${query.toString()}`);
+      if (res.success && res.data) {
+        setPosts(res.data);
+        if (res.meta) {
+          setTotalPages(res.meta.totalPages);
+        }
+      }
+      setLoading(false);
+    };
+
     fetchPosts();
   }, [page, tag, status, sortBy]);
 

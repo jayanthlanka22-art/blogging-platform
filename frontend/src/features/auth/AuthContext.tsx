@@ -24,7 +24,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const parseJwt = (token: string): any => {
   try {
     return JSON.parse(atob(token.split('.')[1]));
-  } catch (e) {
+  } catch {
     return null;
   }
 };
@@ -68,7 +68,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           role: decoded.role,
         });
       }
-    } catch (err) {
+    } catch {
       // Guest user session
     } finally {
       setLoading(false);

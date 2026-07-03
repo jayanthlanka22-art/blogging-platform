@@ -17,21 +17,21 @@ export const PostDetail: React.FC = () => {
   const [post, setPost] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchPost = async () => {
-    setLoading(true);
-    const res = await request(`/posts/${slug}`);
-    if (res.success && res.data) {
-      setPost(res.data);
-    } else {
-      toast(res.error?.message || 'Failed to fetch article', 'error');
-      navigate('/');
-    }
-    setLoading(false);
-  };
-
   useEffect(() => {
+    const fetchPost = async () => {
+      setLoading(true);
+      const res = await request(`/posts/${slug}`);
+      if (res.success && res.data) {
+        setPost(res.data);
+      } else {
+        toast(res.error?.message || 'Failed to fetch article', 'error');
+        navigate('/');
+      }
+      setLoading(false);
+    };
+
     fetchPost();
-  }, [slug]);
+  }, [slug, toast, navigate]);
 
   const handleDelete = async () => {
     if (!post) return;

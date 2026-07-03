@@ -77,7 +77,7 @@ export const PostEditor: React.FC = () => {
 
       fetchPostToEdit();
     }
-  }, [id]);
+  }, [id, toast, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
