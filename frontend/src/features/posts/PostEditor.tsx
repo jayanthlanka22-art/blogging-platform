@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { request } from '../../services/api';
 import { useToast } from '../../hooks/useToast';
-import { CreatePostSchema } from '../../../../backend/src/utils/validation';
+import { CreatePostSchema } from '../../utils/validation';
 import { ArrowLeft, Save, Eye, Edit3 } from 'lucide-react';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
@@ -100,7 +100,7 @@ export const PostEditor: React.FC = () => {
     const validationResult = CreatePostSchema.safeParse(postPayload);
     if (!validationResult.success) {
       const formattedErrors: any = {};
-      validationResult.error.errors.forEach((err) => {
+      validationResult.error.errors.forEach((err: { path: (string | number)[]; message: string }) => {
         const path = err.path[0];
         formattedErrors[path] = err.message;
       });

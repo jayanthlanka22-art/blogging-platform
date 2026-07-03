@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import { UserPlus, Check, X } from 'lucide-react';
-import { RegisterSchema } from '../../../../backend/src/utils/validation';
+import { RegisterSchema } from '../../utils/validation';
 
 export const Register: React.FC = () => {
   const { register } = useAuth();
