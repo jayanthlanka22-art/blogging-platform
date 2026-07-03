@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 import authRouter from './auth.routes';
 import postRouter from './post.routes';
 import commentRouter from './comment.routes';
@@ -14,7 +14,7 @@ router.use('/comments', commentRouter);
 // Fetch all tags dynamically
 router.get(
   '/tags',
-  catchAsync(async (req, res) => {
+  catchAsync(async (req: Request, res: Response) => {
     const tags = await prisma.tag.findMany({
       orderBy: { name: 'asc' },
     });
