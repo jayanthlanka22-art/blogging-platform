@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { request } from '../../services/api';
 import { PostCard } from '../../components/PostCard';
 import { useAuth } from '../auth/AuthContext';
-import { Filter, SlidersHorizontal, ChevronLeft, ChevronRight, Grid } from 'lucide-react';
+import { Filter, SlidersHorizontal, ChevronLeft, ChevronRight, Grid, Search, X } from 'lucide-react';
 
 export const PostList: React.FC = () => {
   const { isAuthenticated } = useAuth();
@@ -14,6 +14,31 @@ export const PostList: React.FC = () => {
   const [tag, setTag] = useState('');
   const [status, setStatus] = useState<string>('');
   const [sortBy, setSortBy] = useState<'newest' | 'oldest' | 'most-commented'>('newest');
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [tags, setTags] = useState<any[]>([]);
+
+  // Fetch tags dynamically
+  useEffect(() => {
+    const fetchTags = async () => {
+      const res = await request('/tags');
+      if (res.success && res.data) {
+        setTags(res.data);
+      }
+    };
+    fetchTags();
+  }, []);
+
+  // Debounce search term to prevent excessive API requests
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 400);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [search]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -24,6 +49,7 @@ export const PostList: React.FC = () => {
       query.append('sortBy', sortBy);
       if (tag) query.append('tag', tag);
       if (status) query.append('status', status);
+      if (debouncedSearch) query.append('search', debouncedSearch);
 
       const res = await request(`/posts?${query.toString()}`);
       if (res.success && res.data) {
@@ -36,7 +62,7 @@ export const PostList: React.FC = () => {
     };
 
     fetchPosts();
-  }, [page, tag, status, sortBy]);
+  }, [page, tag, status, sortBy, debouncedSearch]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -46,6 +72,7 @@ export const PostList: React.FC = () => {
   };
 
   const clearFilters = () => {
+    setSearch('');
     setTag('');
     setStatus('');
     setSortBy('newest');
@@ -66,21 +93,41 @@ export const PostList: React.FC = () => {
 
       {/* Filters Toolbar */}
       <section className="p-4 rounded-xl glass-panel border border-dark-border flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap items-center gap-4 flex-1">
+          {/* Search Input */}
+          <div className="relative flex-1 min-w-[200px] max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search posts..."
+              value={search}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+              className="w-full bg-dark-bg border border-dark-border text-gray-300 text-sm rounded-lg pl-9 pr-8 py-2 focus:border-brand-500 focus:outline-none"
+            />
+            {search && (
+              <button
+                onClick={() => { setSearch(''); setPage(1); }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+
           {/* Tag Filter */}
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-brand-400" />
             <select
               value={tag}
               onChange={(e) => { setTag(e.target.value); setPage(1); }}
-              className="bg-dark-bg border border-dark-border text-gray-300 text-sm rounded-lg p-2.5 focus:border-brand-500 focus:outline-none"
+              className="bg-dark-bg border border-dark-border text-gray-300 text-sm rounded-lg p-2 focus:border-brand-500 focus:outline-none"
             >
               <option value="">All Tags</option>
-              <option value="react">React</option>
-              <option value="typescript">TypeScript</option>
-              <option value="node">Node.js</option>
-              <option value="database">Database</option>
-              <option value="security">Security</option>
+              {tags.map((t) => (
+                <option key={t.id} value={t.name}>
+                  {t.name.charAt(0).toUpperCase() + t.name.slice(1)}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -90,7 +137,7 @@ export const PostList: React.FC = () => {
               <select
                 value={status}
                 onChange={(e) => { setStatus(e.target.value); setPage(1); }}
-                className="bg-dark-bg border border-dark-border text-gray-300 text-sm rounded-lg p-2.5 focus:border-brand-500 focus:outline-none"
+                className="bg-dark-bg border border-dark-border text-gray-300 text-sm rounded-lg p-2 focus:border-brand-500 focus:outline-none"
               >
                 <option value="">Published Only</option>
                 <option value="DRAFT">My Drafts</option>
@@ -106,7 +153,7 @@ export const PostList: React.FC = () => {
             <select
               value={sortBy}
               onChange={(e) => { setSortBy(e.target.value as any); setPage(1); }}
-              className="bg-dark-bg border border-dark-border text-gray-300 text-sm rounded-lg p-2.5 focus:border-brand-500 focus:outline-none"
+              className="bg-dark-bg border border-dark-border text-gray-300 text-sm rounded-lg p-2 focus:border-brand-500 focus:outline-none"
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
@@ -114,7 +161,7 @@ export const PostList: React.FC = () => {
             </select>
           </div>
 
-          {(tag || status || sortBy !== 'newest') && (
+          {(search || tag || status || sortBy !== 'newest') && (
             <button
               onClick={clearFilters}
               className="text-xs font-semibold text-rose-400 hover:text-rose-300 hover:underline"

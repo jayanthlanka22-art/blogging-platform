@@ -81,25 +81,29 @@ export class PostService {
     sortBy?: 'newest' | 'oldest' | 'most-commented';
     currentUserId?: string;
     currentUserRole?: string;
+    search?: string;
   }) {
     const page = Math.max(1, options.page || 1);
     const limit = Math.max(1, options.limit || 10);
     const skip = (page - 1) * limit;
 
     const where: any = { isDeleted: false };
+    const andConditions: any[] = [];
 
     // Filter by tag
     if (options.tag) {
-      where.tags = {
-        some: {
-          name: options.tag.toLowerCase(),
+      andConditions.push({
+        tags: {
+          some: {
+            name: options.tag.toLowerCase(),
+          },
         },
-      };
+      });
     }
 
     // Filter by author
     if (options.authorId) {
-      where.authorId = options.authorId;
+      andConditions.push({ authorId: options.authorId });
     }
 
     // Status filtering rules:
@@ -112,13 +116,19 @@ export class PostService {
         }
         if (options.currentUserRole !== 'ADMIN') {
           // If not admin, restrict drafts to only the requesting user's posts
-          where.status = PostStatus.DRAFT;
-          where.authorId = options.currentUserId;
+          andConditions.push({
+            status: PostStatus.DRAFT,
+            authorId: options.currentUserId,
+          });
         } else {
-          where.status = PostStatus.DRAFT;
+          andConditions.push({
+            status: PostStatus.DRAFT,
+          });
         }
       } else {
-        where.status = PostStatus.PUBLISHED;
+        andConditions.push({
+          status: PostStatus.PUBLISHED,
+        });
       }
     } else {
       // No status parameter.
@@ -128,13 +138,40 @@ export class PostService {
       if (options.currentUserRole === 'ADMIN') {
         // Can see all statuses
       } else if (options.currentUserId) {
-        where.OR = [
-          { status: PostStatus.PUBLISHED },
-          { status: PostStatus.DRAFT, authorId: options.currentUserId },
-        ];
+        andConditions.push({
+          OR: [
+            { status: PostStatus.PUBLISHED },
+            { status: PostStatus.DRAFT, authorId: options.currentUserId },
+          ],
+        });
       } else {
-        where.status = PostStatus.PUBLISHED;
+        andConditions.push({
+          status: PostStatus.PUBLISHED,
+        });
       }
+    }
+
+    // Filter by search term
+    if (options.search) {
+      const isProduction = process.env.NODE_ENV === 'production';
+      const searchCondition = isProduction
+        ? [
+            { title: { contains: options.search, mode: 'insensitive' } },
+            { content: { contains: options.search, mode: 'insensitive' } },
+            { excerpt: { contains: options.search, mode: 'insensitive' } },
+          ]
+        : [
+            { title: { contains: options.search } },
+            { content: { contains: options.search } },
+            { excerpt: { contains: options.search } },
+          ];
+      andConditions.push({
+        OR: searchCondition,
+      });
+    }
+
+    if (andConditions.length > 0) {
+      where.AND = andConditions;
     }
 
     // Determine sorting

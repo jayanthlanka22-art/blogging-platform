@@ -35,6 +35,7 @@ export class PostController {
     const authorId = req.query.authorId as string | undefined;
     const status = req.query.status as PostStatus | undefined;
     const sortBy = req.query.sortBy as 'newest' | 'oldest' | 'most-commented' | undefined;
+    const search = req.query.search as string | undefined;
 
     const result = await PostService.list({
       page,
@@ -43,6 +44,7 @@ export class PostController {
       authorId,
       status,
       sortBy,
+      search,
       currentUserId: req.user?.userId,
       currentUserRole: req.user?.role,
     });
